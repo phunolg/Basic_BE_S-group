@@ -58,14 +58,15 @@ jobs:
           envs: PRIVATE_SSH_KEY,REGISTRY,REPOSITORY,IMAGE_TAG,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,AWS_DEFAULT_REGION,PORT,DATABASE_URL
           script: |
             sudo service docker start
-            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REGISTRY
-            docker stop $(docker ps -aq) || true
-            docker rm $(docker ps -aq) || true
-            docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-            docker run -d -p $PORT:$PORT \
+            sudo /usr/local/bin/aws ecr get-login-password --region $AWS_DEFAULT_REGION | sudo docker login --username AWS --password-stdin $REGISTRY
+            sudo docker stop $(sudo docker ps -aq) || true
+            sudo docker rm $(sudo docker ps -aq) || true
+            sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+            sudo docker run -d -p $PORT:$PORT \
               --name s-group-backend \
               -e PORT=$PORT \
               -e DATABASE_URL=$DATABASE_URL \
               $REGISTRY/$REPOSITORY:$IMAGE_TAG
-            docker container prune -f
-            docker image prune -a -f
+            sudo docker container prune -f
+            sudo docker image prune -a -f
+
