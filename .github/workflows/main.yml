@@ -35,6 +35,10 @@ jobs:
         with:
           registry-type: private
           region: ${{ env.AWS_REGION }}
+      - name: Debug registry
+        run: echo "REGISTRY is $REGISTRY"
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 
       - name: Build and push Docker image to ECR
         env:
